@@ -1,0 +1,72 @@
+name: Deploy DocC
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  DERIVED_DATA_PATH: DerivedData
+  DOCC_SCHEME: PokemonDesignSystem
+  HOSTING_BASE_PATH: ${{ github.event.repository.name }}
+  PAGES_ARTIFACT_PATH: pages-artifact
+
+jobs:
+  build:
+    name: Build DocC archive
+    runs-on: macos-26
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.4.1.app/Contents/Developer
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Build DocC archive
+        run: |
+          xcodebuild docbuild \
+            -scheme "$DOCC_SCHEME" \
+            -destination 'generic/platform=macOS' \
+            -derivedDataPath "$DERIVED_DATA_PATH"
+
+      - name: Process DocC archive for static hosting
+        run: |
+          mkdir -p "$PAGES_ARTIFACT_PATH"
+          DOCC_ARCHIVE="$(find "$DERIVED_DATA_PATH/Build/Products" -name '*.doccarchive' -type d | head -n 1)"
+          test -n "$DOCC_ARCHIVE"
+          xcrun docc process-archive \
+            transform-for-static-hosting "$DOCC_ARCHIVE" \
+            --output-path "$PAGES_ARTIFACT_PATH" \
+            --hosting-base-path "$HOSTING_BASE_PATH"
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: ${{ env.PAGES_ARTIFACT_PATH }}
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
