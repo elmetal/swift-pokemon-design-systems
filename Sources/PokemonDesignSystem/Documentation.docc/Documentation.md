@@ -13,14 +13,17 @@ views, widgets, and platform-specific experiences.
 ```swift
 import SwiftUI
 import PokemonDesignSystem
+import PokemonTypes
 
 struct TypeBadge: View {
+    let pokemonType: PokemonType = .fire
+
     var body: some View {
         Text("Fire")
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
             .foregroundStyle(.white)
-            .background(Capsule().fill(Color.pokemonFireTint))
+            .background(Capsule().fill(pokemonType.tintColor))
     }
 }
 ```
@@ -47,3 +50,7 @@ struct TypeBadge: View {
 - ``Color/pokemonDarkTint``
 - ``Color/pokemonSteelTint``
 - ``Color/pokemonFairyTint``
+
+### Pokemon Type Extensions
+
+- ``PokemonTypes/PokemonType/tintColor``

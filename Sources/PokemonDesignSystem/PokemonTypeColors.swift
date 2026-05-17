@@ -1,3 +1,4 @@
+import PokemonTypes
 import SwiftUI
 
 public extension Color {
@@ -19,4 +20,47 @@ public extension Color {
     static let pokemonDarkTint = Color(red: 80 / 255, green: 65 / 255, blue: 63 / 255)
     static let pokemonSteelTint = Color(red: 96 / 255, green: 161 / 255, blue: 184 / 255)
     static let pokemonFairyTint = Color(red: 239 / 255, green: 112 / 255, blue: 239 / 255)
+}
+
+public extension PokemonType {
+    var tintColor: Color {
+        switch self {
+        case .normal:
+            .pokemonNormalTint
+        case .fighting:
+            .pokemonFightingTint
+        case .flying:
+            .pokemonFlyingTint
+        case .poison:
+            .pokemonPoisonTint
+        case .bug:
+            .pokemonBugTint
+        case .steel:
+            .pokemonSteelTint
+        case .psychic:
+            .pokemonPsychicTint
+        case .ice:
+            .pokemonIceTint
+        case .dragon:
+            .pokemonDragonTint
+        case .dark:
+            .pokemonDarkTint
+        case .fairy:
+            .pokemonFairyTint
+        case .fire:
+            .pokemonFireTint
+        case .water:
+            .pokemonWaterTint
+        case .grass:
+            .pokemonGrassTint
+        case .electric:
+            .pokemonElectricTint
+        case .ground:
+            .pokemonGroundTint
+        case .rock:
+            .pokemonRockTint
+        case .ghost:
+            .pokemonGhostTint
+        }
+    }
 }
