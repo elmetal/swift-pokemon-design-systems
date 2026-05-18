@@ -44,7 +44,7 @@ jobs:
       - name: Process DocC archive for static hosting
         run: |
           mkdir -p "$PAGES_ARTIFACT_PATH"
-          DOCC_ARCHIVE="$(find "$DERIVED_DATA_PATH/Build/Products" -name '*.doccarchive' -type d | head -n 1)"
+          DOCC_ARCHIVE="$(find "$DERIVED_DATA_PATH/Build/Products" -name "$DOCC_SCHEME.doccarchive" -type d -print -quit)"
           test -n "$DOCC_ARCHIVE"
           xcrun docc process-archive \
             transform-for-static-hosting "$DOCC_ARCHIVE" \
