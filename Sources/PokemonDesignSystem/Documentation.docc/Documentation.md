@@ -33,29 +33,29 @@ struct TypeBadge: View {
 ### Pokemon Type Colors
 
 - ``SwiftUICore/Color/pokemonNormalTint``
-- ``Color/pokemonFireTint``
-- ``Color/pokemonWaterTint``
-- ``Color/pokemonElectricTint``
-- ``Color/pokemonGrassTint``
-- ``Color/pokemonIceTint``
-- ``Color/pokemonFightingTint``
-- ``Color/pokemonPoisonTint``
-- ``Color/pokemonGroundTint``
-- ``Color/pokemonFlyingTint``
-- ``Color/pokemonPsychicTint``
-- ``Color/pokemonBugTint``
-- ``Color/pokemonRockTint``
-- ``Color/pokemonGhostTint``
-- ``Color/pokemonDragonTint``
-- ``Color/pokemonDarkTint``
-- ``Color/pokemonSteelTint``
-- ``Color/pokemonFairyTint``
+- ``SwiftUICore/Color/pokemonFireTint``
+- ``SwiftUICore/Color/pokemonWaterTint``
+- ``SwiftUICore/Color/pokemonElectricTint``
+- ``SwiftUICore/Color/pokemonGrassTint``
+- ``SwiftUICore/Color/pokemonIceTint``
+- ``SwiftUICore/Color/pokemonFightingTint``
+- ``SwiftUICore/Color/pokemonPoisonTint``
+- ``SwiftUICore/Color/pokemonGroundTint``
+- ``SwiftUICore/Color/pokemonFlyingTint``
+- ``SwiftUICore/Color/pokemonPsychicTint``
+- ``SwiftUICore/Color/pokemonBugTint``
+- ``SwiftUICore/Color/pokemonRockTint``
+- ``SwiftUICore/Color/pokemonGhostTint``
+- ``SwiftUICore/Color/pokemonDragonTint``
+- ``SwiftUICore/Color/pokemonDarkTint``
+- ``SwiftUICore/Color/pokemonSteelTint``
+- ``SwiftUICore/Color/pokemonFairyTint``
 
 ### Pokemon Move Category Colors
 
-- ``Color/pokemonPhysicalMoveTint``
-- ``Color/pokemonSpecialMoveTint``
-- ``Color/pokemonStatusMoveTint``
+- ``SwiftUICore/Color/pokemonPhysicalMoveTint``
+- ``SwiftUICore/Color/pokemonSpecialMoveTint``
+- ``SwiftUICore/Color/pokemonStatusMoveTint``
 
 ### Pokemon Type Extensions
 
