@@ -1,6 +1,6 @@
 # ``PokemonDesignSystem``
 
-@Options(scope: global) {
+@Options(scope: local) {
     @TopicsVisualStyle(hidden)
 }
 
@@ -36,4 +36,10 @@ struct TypeBadge: View {
 
 @Links(visualStyle: compactGrid) {
     - <doc:Colors>
+}
+
+## Components
+
+@Links(visualStyle: compactGrid) {
+    - <doc:StatCharts>
 }

@@ -1,10 +1,31 @@
 import SwiftUI
 
+/// A horizontal bar chart style for ``PokemonStatChart``.
+///
+/// Apply this style with ``SwiftUICore/View/pokemonStatChartStyle(_:)`` or the
+/// shorthand ``PokemonStatChartStyle/bar`` member.
+///
+/// ```swift
+/// PokemonStatChart(HP: 108, A: 130, B: 95, C: 80, D: 85, S: 102)
+///     .pokemonStatChartStyle(.bar)
+///     .tint(.pokemonFightingTint)
+/// ```
 public struct BarPokemonStatChartStyle: PokemonStatChartStyle {
+    /// The color used for the unfilled portion of each bar.
     public var trackColor: Color
+
+    /// The color used for stat labels.
     public var labelColor: Color
+
+    /// The color used for stat values.
     public var valueColor: Color
 
+    /// Creates a bar stat chart style.
+    ///
+    /// - Parameters:
+    ///   - trackColor: The color used for the unfilled portion of each bar.
+    ///   - labelColor: The color used for stat labels.
+    ///   - valueColor: The color used for stat values.
     public init(
         trackColor: Color = Color.secondary.opacity(0.16),
         labelColor: Color = .secondary,
@@ -15,6 +36,7 @@ public struct BarPokemonStatChartStyle: PokemonStatChartStyle {
         self.valueColor = valueColor
     }
 
+    /// Creates the bar chart body.
     public func makeBody(configuration: PokemonStatChartStyleConfiguration) -> some View {
         VStack(spacing: 8) {
             ForEach(configuration.statEntries) { entry in
@@ -62,6 +84,7 @@ public struct BarPokemonStatChartStyle: PokemonStatChartStyle {
 }
 
 public extension PokemonStatChartStyle where Self == BarPokemonStatChartStyle {
+    /// A horizontal bar chart style.
     static var bar: Self {
         Self()
     }

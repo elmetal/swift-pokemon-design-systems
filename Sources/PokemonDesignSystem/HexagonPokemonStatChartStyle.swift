@@ -1,11 +1,37 @@
 import SwiftUI
 
+/// A hexagon radar chart style for ``PokemonStatChart``.
+///
+/// Apply this style with ``SwiftUICore/View/pokemonStatChartStyle(_:)`` or the
+/// shorthand ``PokemonStatChartStyle/hexagon`` member.
+///
+/// ```swift
+/// PokemonStatChart(HP: 108, A: 130, B: 95, C: 80, D: 85, S: 102)
+///     .pokemonStatChartStyle(.hexagon)
+///     .tint(.pokemonDragonTint)
+/// ```
 public struct HexagonPokemonStatChartStyle: PokemonStatChartStyle {
+    /// The color used for the radar grid.
     public var gridColor: Color
+
+    /// The color used for stat labels and values.
     public var labelColor: Color
+
+    /// The number of grid rings drawn inside the chart.
     public var ringCount: Int
+
+    /// The label distance from the chart center, expressed as a fraction of the
+    /// chart size.
     public var labelRadiusScale: CGFloat
 
+    /// Creates a hexagon stat chart style.
+    ///
+    /// - Parameters:
+    ///   - gridColor: The color used for the radar grid.
+    ///   - labelColor: The color used for stat labels and values.
+    ///   - ringCount: The number of grid rings drawn inside the chart.
+    ///   - labelRadiusScale: The label distance from the chart center, expressed
+    ///     as a fraction of the chart size.
     public init(
         gridColor: Color = Color.secondary.opacity(0.3),
         labelColor: Color = .secondary,
@@ -18,6 +44,7 @@ public struct HexagonPokemonStatChartStyle: PokemonStatChartStyle {
         self.labelRadiusScale = labelRadiusScale
     }
 
+    /// Creates the hexagon chart body.
     public func makeBody(configuration: PokemonStatChartStyleConfiguration) -> some View {
         GeometryReader { proxy in
             let chartSize = min(proxy.size.width, proxy.size.height)
@@ -108,6 +135,7 @@ public struct HexagonPokemonStatChartStyle: PokemonStatChartStyle {
 }
 
 public extension PokemonStatChartStyle where Self == HexagonPokemonStatChartStyle {
+    /// A hexagon radar chart style.
     static var hexagon: Self {
         Self()
     }

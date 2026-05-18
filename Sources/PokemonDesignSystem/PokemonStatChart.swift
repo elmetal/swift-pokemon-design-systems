@@ -1,11 +1,33 @@
 import SwiftUI
 
+/// A SwiftUI view that draws six Pokemon stat values.
+///
+/// Use `PokemonStatChart` with one of the built-in chart styles, or provide a
+/// custom ``PokemonStatChartStyle``. The chart color follows SwiftUI's standard
+/// `tint(_:)` modifier.
+///
+/// ```swift
+/// PokemonStatChart(HP: 108, A: 130, B: 95, C: 80, D: 85, S: 102)
+///     .pokemonStatChartStyle(.hexagon)
+///     .tint(.pokemonFireTint)
+/// ```
 public struct PokemonStatChart: View {
     private let stats: PokemonStatValues
     private let maxValue: Double?
 
     @Environment(\.pokemonStatChartStyle) private var style
 
+    /// Creates a stat chart with the conventional Pokemon stat abbreviations.
+    ///
+    /// - Parameters:
+    ///   - HP: Hit points.
+    ///   - A: Attack.
+    ///   - B: Defense.
+    ///   - C: Special attack.
+    ///   - D: Special defense.
+    ///   - S: Speed.
+    ///   - maxValue: The value used as the full scale of the chart. When `nil`,
+    ///     the chart uses the largest supplied stat value.
     public init(
         HP: Double,
         A: Double,
@@ -28,6 +50,17 @@ public struct PokemonStatChart: View {
         )
     }
 
+    /// Creates a stat chart with descriptive stat parameter names.
+    ///
+    /// - Parameters:
+    ///   - hp: Hit points.
+    ///   - attack: Attack.
+    ///   - defense: Defense.
+    ///   - specialAttack: Special attack.
+    ///   - specialDefense: Special defense.
+    ///   - speed: Speed.
+    ///   - maxValue: The value used as the full scale of the chart. When `nil`,
+    ///     the chart uses the largest supplied stat value.
     public init(
         hp: Double,
         attack: Double,
@@ -55,6 +88,7 @@ public struct PokemonStatChart: View {
         self.maxValue = maxValue
     }
 
+    /// The chart content.
     public var body: some View {
         AnyView(
             style.makeBody(
@@ -155,8 +189,15 @@ enum PokemonStatKind: CaseIterable, Hashable, Sendable {
     }
 }
 
+/// The values and scale passed from a ``PokemonStatChart`` to its style.
+///
+/// Custom styles receive this configuration from
+/// ``PokemonStatChartStyle/makeBody(configuration:)``. Values are exposed both
+/// as individual properties and as ordered entries for repeated rendering.
 public struct PokemonStatChartStyleConfiguration {
     let stats: PokemonStatValues
+
+    /// The value used as the full scale of the chart.
     public let maxValue: Double
 
     init(stats: PokemonStatValues, maxValue: Double) {
@@ -164,30 +205,38 @@ public struct PokemonStatChartStyleConfiguration {
         self.maxValue = max(maxValue, 1)
     }
 
+    /// Hit points.
     public var hp: Double {
         stats.hp
     }
 
+    /// Attack.
     public var attack: Double {
         stats.attack
     }
 
+    /// Defense.
     public var defense: Double {
         stats.defense
     }
 
+    /// Special attack.
     public var specialAttack: Double {
         stats.specialAttack
     }
 
+    /// Special defense.
     public var specialDefense: Double {
         stats.specialDefense
     }
 
+    /// Speed.
     public var speed: Double {
         stats.speed
     }
 
+    /// The stat entries in HP, Attack, Defense, Special Attack, Special Defense,
+    /// Speed order.
     public var entries: [(label: String, value: Double)] {
         statEntries.map { entry in
             (label: entry.label, value: entry.value)
@@ -198,6 +247,7 @@ public struct PokemonStatChartStyleConfiguration {
         stats.entries
     }
 
+    /// Returns `value` normalized against ``maxValue`` and clamped to `0...1`.
     public func normalizedValue(for value: Double) -> Double {
         min(max(value / maxValue, 0), 1)
     }
@@ -207,14 +257,25 @@ public struct PokemonStatChartStyleConfiguration {
     }
 }
 
+/// A type that defines the visual representation of a ``PokemonStatChart``.
+///
+/// Implement this protocol to create custom chart styles. Users apply a style
+/// with ``SwiftUICore/View/pokemonStatChartStyle(_:)``.
 public protocol PokemonStatChartStyle: Sendable {
+    /// The view produced by this style.
     associatedtype Body: View
 
+    /// Creates the styled chart body.
+    ///
+    /// - Parameter configuration: The stat values and scale supplied by the chart.
     @ViewBuilder
     func makeBody(configuration: PokemonStatChartStyleConfiguration) -> Body
 }
 
 public extension View {
+    /// Sets the style used by ``PokemonStatChart`` views in this view hierarchy.
+    ///
+    /// - Parameter style: The chart style to apply.
     func pokemonStatChartStyle(_ style: some PokemonStatChartStyle) -> some View {
         environment(\.pokemonStatChartStyle, style)
     }
