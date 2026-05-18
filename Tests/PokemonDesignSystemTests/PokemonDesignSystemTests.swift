@@ -16,3 +16,12 @@ import Testing
     _ = Color.pokemonSpecialMoveTint
     _ = Color.pokemonStatusMoveTint
 }
+
+@MainActor @Test func pokemonStatChartStylesAreAvailable() {
+    _ = PokemonStatChart(HP: 108, A: 130, B: 95, C: 80, D: 85, S: 102)
+        .pokemonStatChartStyle(.bar)
+
+    _ = PokemonStatChart(HP: 108, A: 130, B: 95, C: 80, D: 85, S: 102)
+        .pokemonStatChartStyle(.hexagon)
+        .tint(.pokemonFireTint)
+}
