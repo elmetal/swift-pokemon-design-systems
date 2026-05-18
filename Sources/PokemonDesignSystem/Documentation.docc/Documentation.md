@@ -32,7 +32,7 @@ struct TypeBadge: View {
 
 ### Pokemon Type Colors
 
-- ``Color/pokemonNormalTint``
+- ``SwiftUICore/Color/pokemonNormalTint``
 - ``Color/pokemonFireTint``
 - ``Color/pokemonWaterTint``
 - ``Color/pokemonElectricTint``
@@ -50,6 +50,12 @@ struct TypeBadge: View {
 - ``Color/pokemonDarkTint``
 - ``Color/pokemonSteelTint``
 - ``Color/pokemonFairyTint``
+
+### Pokemon Move Category Colors
+
+- ``Color/pokemonPhysicalMoveTint``
+- ``Color/pokemonSpecialMoveTint``
+- ``Color/pokemonStatusMoveTint``
 
 ### Pokemon Type Extensions
 

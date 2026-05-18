@@ -1,4 +1,5 @@
 import PokemonTypes
+import SwiftUI
 import Testing
 @testable import PokemonDesignSystem
 
@@ -8,4 +9,10 @@ import Testing
     }
 
     #expect(PokemonType.allCases.count == 18)
+}
+
+@Test func moveCategoryTintColorsAreAvailable() {
+    _ = Color.pokemonPhysicalMoveTint
+    _ = Color.pokemonSpecialMoveTint
+    _ = Color.pokemonStatusMoveTint
 }
