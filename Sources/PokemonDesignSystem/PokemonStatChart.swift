@@ -380,7 +380,7 @@ private extension Locale {
 /// Custom styles receive this configuration from
 /// ``PokemonStatChartStyle/makeBody(configuration:)``. Values are exposed both
 /// as individual properties and as ordered entries for repeated rendering.
-public struct PokemonStatChartStyleConfiguration {
+public struct PokemonStatChartStyleConfiguration: Sendable {
     let stats: PokemonStatValues
 
     /// The value used as the full scale of the chart.
