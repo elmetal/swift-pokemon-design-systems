@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 
 /// A SwiftUI view that draws six Pokemon stat values.
@@ -16,6 +17,7 @@ public struct PokemonStatChart: View {
     private let maxValue: Double?
 
     @Environment(\.pokemonStatChartStyle) private var style
+    @Environment(\.pokemonStatChartLabelStyle) private var labelStyle
 
     /// Creates a stat chart with the conventional Pokemon stat abbreviations.
     ///
@@ -94,7 +96,8 @@ public struct PokemonStatChart: View {
             style.makeBody(
                 configuration: PokemonStatChartStyleConfiguration(
                     stats: stats,
-                    maxValue: resolvedMaxValue
+                    maxValue: resolvedMaxValue,
+                    labelStyle: labelStyle
                 )
             )
         )
@@ -154,7 +157,7 @@ struct PokemonStatEntry: Identifiable, Hashable, Sendable {
     }
 
     var label: String {
-        kind.label
+        kind.formatted()
     }
 
     init(kind: PokemonStatKind, value: Double) {
@@ -163,18 +166,126 @@ struct PokemonStatEntry: Identifiable, Hashable, Sendable {
     }
 }
 
-enum PokemonStatKind: CaseIterable, Hashable, Sendable {
+/// A standard Pokemon stat.
+public enum PokemonStatKind: CaseIterable, Hashable, Sendable {
     case hp
     case attack
     case defense
     case specialAttack
     case specialDefense
     case speed
+}
 
-    var label: String {
+public extension PokemonStatKind {
+    /// A format style for Pokemon stat labels.
+    struct FormatStyle: Foundation.FormatStyle, Hashable, Codable, Sendable {
+        /// The amount of detail to include in formatted stat labels.
+        public enum Width: Hashable, Codable, Sendable {
+            /// One-letter labels: H, A, B, C, D, and S.
+            case abbreviated
+
+            /// Compact localized labels, such as Atk or 特攻.
+            case short
+
+            /// Full localized stat names, such as Attack or こうげき.
+            case wide
+        }
+
+        public typealias FormatInput = PokemonStatKind
+        public typealias FormatOutput = String
+
+        /// The label width to use.
+        public var width: Width
+
+        /// The locale used for localized labels.
+        public var locale: Locale
+
+        /// Creates a Pokemon stat label format style.
+        ///
+        /// - Parameters:
+        ///   - width: The amount of detail to include in formatted labels.
+        ///   - locale: The locale used for localized labels.
+        public init(width: Width = .abbreviated, locale: Locale = .autoupdatingCurrent) {
+            self.width = width
+            self.locale = locale
+        }
+
+        /// Formats a Pokemon stat kind.
+        public func format(_ value: PokemonStatKind) -> String {
+            switch width {
+            case .abbreviated:
+                value.abbreviatedLabel
+            case .short:
+                value.shortLabel(locale: locale)
+            case .wide:
+                value.wideLabel(locale: locale)
+            }
+        }
+
+        /// Returns a copy that uses the given label width.
+        public func width(_ width: Width) -> Self {
+            var copy = self
+            copy.width = width
+            return copy
+        }
+
+        /// Returns a copy that uses the given locale.
+        public func locale(_ locale: Locale) -> Self {
+            var copy = self
+            copy.locale = locale
+            return copy
+        }
+    }
+
+    /// Formats this stat kind with the given format style.
+    ///
+    /// The default format uses one-letter labels: H, A, B, C, D, and S.
+    func formatted(_ formatStyle: FormatStyle = .abbreviated) -> String {
+        formatStyle.format(self)
+    }
+}
+
+public extension PokemonStatKind.FormatStyle {
+    /// One-letter labels: H, A, B, C, D, and S.
+    static var abbreviated: Self {
+        Self(width: .abbreviated)
+    }
+
+    /// Compact localized labels, such as Atk or 特攻.
+    static var short: Self {
+        Self(width: .short)
+    }
+
+    /// Full localized stat names, such as Attack or こうげき.
+    static var wide: Self {
+        Self(width: .wide)
+    }
+}
+
+public extension Foundation.FormatStyle where Self == PokemonStatKind.FormatStyle {
+    /// A Pokemon stat label format style.
+    static var pokemonStatKind: Self {
+        Self()
+    }
+
+    /// A Pokemon stat label format style.
+    ///
+    /// - Parameters:
+    ///   - width: The amount of detail to include in formatted labels.
+    ///   - locale: The locale used for localized labels.
+    static func pokemonStatKind(
+        width: PokemonStatKind.FormatStyle.Width = .abbreviated,
+        locale: Locale = .autoupdatingCurrent
+    ) -> Self {
+        Self(width: width, locale: locale)
+    }
+}
+
+private extension PokemonStatKind {
+    var abbreviatedLabel: String {
         switch self {
         case .hp:
-            "HP"
+            "H"
         case .attack:
             "A"
         case .defense:
@@ -186,6 +297,81 @@ enum PokemonStatKind: CaseIterable, Hashable, Sendable {
         case .speed:
             "S"
         }
+    }
+
+    func shortLabel(locale: Locale) -> String {
+        if locale.usesJapaneseStatLabels {
+            switch self {
+            case .hp:
+                "HP"
+            case .attack:
+                "攻撃"
+            case .defense:
+                "防御"
+            case .specialAttack:
+                "特攻"
+            case .specialDefense:
+                "特防"
+            case .speed:
+                "素早さ"
+            }
+        } else {
+            switch self {
+            case .hp:
+                "HP"
+            case .attack:
+                "Atk"
+            case .defense:
+                "Def"
+            case .specialAttack:
+                "Sp. Atk"
+            case .specialDefense:
+                "Sp. Def"
+            case .speed:
+                "Spe"
+            }
+        }
+    }
+
+    func wideLabel(locale: Locale) -> String {
+        if locale.usesJapaneseStatLabels {
+            switch self {
+            case .hp:
+                "HP"
+            case .attack:
+                "こうげき"
+            case .defense:
+                "ぼうぎょ"
+            case .specialAttack:
+                "とくこう"
+            case .specialDefense:
+                "とくぼう"
+            case .speed:
+                "すばやさ"
+            }
+        } else {
+            switch self {
+            case .hp:
+                "HP"
+            case .attack:
+                "Attack"
+            case .defense:
+                "Defense"
+            case .specialAttack:
+                "Special Attack"
+            case .specialDefense:
+                "Special Defense"
+            case .speed:
+                "Speed"
+            }
+        }
+    }
+}
+
+private extension Locale {
+    var usesJapaneseStatLabels: Bool {
+        let normalizedIdentifier = identifier.replacingOccurrences(of: "-", with: "_")
+        return normalizedIdentifier.split(separator: "_").first == "ja"
     }
 }
 
@@ -200,9 +386,17 @@ public struct PokemonStatChartStyleConfiguration {
     /// The value used as the full scale of the chart.
     public let maxValue: Double
 
-    init(stats: PokemonStatValues, maxValue: Double) {
+    /// The format style used for stat labels.
+    public let labelStyle: PokemonStatKind.FormatStyle
+
+    init(
+        stats: PokemonStatValues,
+        maxValue: Double,
+        labelStyle: PokemonStatKind.FormatStyle = .abbreviated
+    ) {
         self.stats = stats
         self.maxValue = max(maxValue, 1)
+        self.labelStyle = labelStyle
     }
 
     /// Hit points.
@@ -238,8 +432,18 @@ public struct PokemonStatChartStyleConfiguration {
     /// The stat entries in HP, Attack, Defense, Special Attack, Special Defense,
     /// Speed order.
     public var entries: [(label: String, value: Double)] {
+        formattedEntries(labelStyle)
+    }
+
+    /// Returns stat entries whose labels are formatted with the given style.
+    ///
+    /// Use this from custom chart styles when you need localized or differently
+    /// abbreviated stat labels.
+    public func formattedEntries(
+        _ formatStyle: PokemonStatKind.FormatStyle = .abbreviated
+    ) -> [(label: String, value: Double)] {
         statEntries.map { entry in
-            (label: entry.label, value: entry.value)
+            (label: entry.kind.formatted(formatStyle), value: entry.value)
         }
     }
 
@@ -279,10 +483,22 @@ public extension View {
     func pokemonStatChartStyle(_ style: some PokemonStatChartStyle) -> some View {
         environment(\.pokemonStatChartStyle, style)
     }
+
+    /// Sets the label style used by ``PokemonStatChart`` views in this view
+    /// hierarchy.
+    ///
+    /// - Parameter labelStyle: The label style to apply.
+    func pokemonStatChartLabelStyle(_ labelStyle: PokemonStatKind.FormatStyle) -> some View {
+        environment(\.pokemonStatChartLabelStyle, labelStyle)
+    }
 }
 
 private struct PokemonStatChartStyleKey: EnvironmentKey {
     static let defaultValue: any PokemonStatChartStyle = HexagonPokemonStatChartStyle()
+}
+
+private struct PokemonStatChartLabelStyleKey: EnvironmentKey {
+    static let defaultValue: PokemonStatKind.FormatStyle = .abbreviated
 }
 
 private extension EnvironmentValues {
@@ -294,6 +510,15 @@ private extension EnvironmentValues {
             self[PokemonStatChartStyleKey.self] = newValue
         }
     }
+
+    var pokemonStatChartLabelStyle: PokemonStatKind.FormatStyle {
+        get {
+            self[PokemonStatChartLabelStyleKey.self]
+        }
+        set {
+            self[PokemonStatChartLabelStyleKey.self] = newValue
+        }
+    }
 }
 
 #Preview {
@@ -302,4 +527,5 @@ private extension EnvironmentValues {
 
     PokemonStatChart(HP: 108, A: 130, B: 95, C: 80, D: 85, S: 102)
         .pokemonStatChartStyle(.bar)
+        .pokemonStatChartLabelStyle(.short)
 }

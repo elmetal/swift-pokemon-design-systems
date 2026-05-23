@@ -34,6 +34,17 @@ PokemonStatChart(HP: 108, A: 130, B: 95, C: 80, D: 85, S: 102)
     .pokemonStatChartStyle(.bar)
 ```
 
+### Format Stat Labels
+
+Stat labels use ``PokemonStatKind/FormatStyle``. The default label format is
+the compact H, A, B, C, D, and S notation. Built-in styles can also use
+localized short or wide labels.
+
+```swift
+PokemonStatChart(HP: 108, A: 130, B: 95, C: 80, D: 85, S: 102)
+    .pokemonStatChartLabelStyle(.wide.locale(Locale(identifier: "ja_JP")))
+```
+
 ### Set the Chart Color
 
 Stat chart fill and stroke colors follow SwiftUI's standard `tint(_:)`
@@ -50,12 +61,15 @@ PokemonStatChart(HP: 108, A: 130, B: 95, C: 80, D: 85, S: 102)
 ### Creating Charts
 
 - ``PokemonStatChart``
+- ``PokemonStatKind``
+- ``PokemonStatKind/FormatStyle``
 
 ### Styling Charts
 
 - ``PokemonStatChartStyle``
 - ``PokemonStatChartStyleConfiguration``
 - ``SwiftUICore/View/pokemonStatChartStyle(_:)``
+- ``SwiftUICore/View/pokemonStatChartLabelStyle(_:)``
 
 ### Built-in Styles
 

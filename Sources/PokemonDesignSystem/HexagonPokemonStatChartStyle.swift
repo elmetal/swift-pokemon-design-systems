@@ -63,7 +63,7 @@ public struct HexagonPokemonStatChartStyle: PokemonStatChartStyle {
 
                 ForEach(Array(hexagonEntries(from: configuration).enumerated()), id: \.element.id) { index, entry in
                     VStack(spacing: 1) {
-                        Text(entry.label)
+                        Text(entry.kind.formatted(configuration.labelStyle))
                             .font(.caption)
                             .fontWeight(.semibold)
 

@@ -41,7 +41,7 @@ public struct BarPokemonStatChartStyle: PokemonStatChartStyle {
         VStack(spacing: 8) {
             ForEach(configuration.statEntries) { entry in
                 HStack(spacing: 8) {
-                    Text(entry.label)
+                    Text(entry.kind.formatted(configuration.labelStyle))
                         .font(.caption)
                         .fontWeight(.semibold)
                         .foregroundColor(labelColor)
